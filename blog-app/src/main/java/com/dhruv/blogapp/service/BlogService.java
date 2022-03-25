@@ -2,13 +2,14 @@ package com.dhruv.blogapp.service;
 
 import com.dhruv.blogapp.model.Blog;
 import com.dhruv.blogapp.payload.BlogDto;
+import com.dhruv.blogapp.payload.BlogResponse;
 
 import java.util.List;
 
 public interface BlogService {
     BlogDto createBlogpost(BlogDto blogDto);
 
-    List<BlogDto> getBlogposts();
+    BlogResponse getBlogposts(int pageNo, int pageSize, String property, String sortOrder);
 
     BlogDto getBlogpost(Long id);
 

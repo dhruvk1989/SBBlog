@@ -3,8 +3,13 @@ package com.dhruv.blogapp.service.impl;
 import com.dhruv.blogapp.exceptions.ResourceNotFoundException;
 import com.dhruv.blogapp.model.Blog;
 import com.dhruv.blogapp.payload.BlogDto;
+import com.dhruv.blogapp.payload.BlogResponse;
 import com.dhruv.blogapp.repositories.BlogRepo;
 import com.dhruv.blogapp.service.BlogService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,14 +35,32 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<BlogDto> getBlogposts() {
-        List<Blog> blogs = blogRepo.findAll();
+    public BlogResponse getBlogposts(int pageNo, int pageSize, String property, String sortOrder) {
+
+        Sort sort = Sort.by(property).ascending();
+        if(sortOrder.equalsIgnoreCase(Sort.Direction.DESC.name())){
+            sort = Sort.by(property).descending();
+        } else if(sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name())){
+            sort = Sort.by(property).ascending();
+        }
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Blog> blogPage = blogRepo.findAll(pageable);
+        List<Blog> blogList = blogPage.getContent();
         List<BlogDto> responseBlogs = new ArrayList<>();
-        for (int i = 0; i < blogs.size(); i++){
-            BlogDto dto = EntitytoDTO(blogs.get(i));
+        for (int i = 0; i < blogList.size(); i++){
+            BlogDto dto = EntitytoDTO(blogList.get(i));
             responseBlogs.add(dto);
         }
-        return responseBlogs;
+
+        BlogResponse blogResponse = new BlogResponse(responseBlogs,
+                blogPage.getNumber(),
+                blogPage.getSize(),
+                blogPage.getTotalElements(),
+                blogPage.getTotalPages(),
+                blogPage.isLast());
+
+        return blogResponse;
     }
 
     @Override

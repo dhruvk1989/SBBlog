@@ -6,6 +6,7 @@ import com.dhruv.blogapp.payload.BlogDto;
 import com.dhruv.blogapp.payload.BlogResponse;
 import com.dhruv.blogapp.repositories.BlogRepo;
 import com.dhruv.blogapp.service.BlogService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +19,13 @@ import java.util.List;
 @Service
 public class BlogServiceImpl implements BlogService {
 
+    private ModelMapper modelMapper;
+
     private BlogRepo blogRepo;
 
-    public BlogServiceImpl(BlogRepo blogRepo) {
+    public BlogServiceImpl(BlogRepo blogRepo, ModelMapper modelMapper) {
         this.blogRepo = blogRepo;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -85,22 +89,14 @@ public class BlogServiceImpl implements BlogService {
         blogRepo.delete(blog);
     }
 
-    private static Blog DTOtoEntity(BlogDto dto){
-        Blog blog = new Blog();
-        blog.setTitle(dto.getTitle());
-        blog.setDescription(dto.getDescription());
-        blog.setId(dto.getId());
-        blog.setContent(dto.getContent());
+    private Blog DTOtoEntity(BlogDto dto){
+        Blog blog = modelMapper.map(dto, Blog.class);
         return blog;
     }
 
-    private static BlogDto EntitytoDTO(Blog blog){
-        BlogDto dto = new BlogDto();
-        dto.setTitle(blog.getTitle());
-        dto.setDescription(blog.getDescription());
-        dto.setId(blog.getId());
-        dto.setContent(blog.getContent());
-        return dto;
+    private BlogDto EntitytoDTO(Blog blog){
+        BlogDto blogDto = modelMapper.map(blog, BlogDto.class);
+        return blogDto;
     }
 
 }

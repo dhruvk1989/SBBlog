@@ -3,8 +3,11 @@ package com.dhruv.blogapp.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
@@ -18,4 +21,7 @@ public class Blog {
     private String title;
     private String description;
     private String content;
+
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comment = new HashSet<>();
 }

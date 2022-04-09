@@ -16,7 +16,7 @@ public class Comment {
     private Long id;
     private String name;
     private String email;
-    private String comment;
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)

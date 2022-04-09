@@ -82,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
         if(comment1.getBlog().getId() == blog.getId()) {
             comment1.setName(comment.getName());
             comment1.setEmail(comment.getEmail());
-            comment1.setComment(comment.getContent());
+            comment1.setContent(comment.getContent());
             return EntitytoDTO(commentRepo.save(comment1));
         }else{
             throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to this blogpost");

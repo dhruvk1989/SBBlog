@@ -9,6 +9,7 @@ import com.dhruv.blogapp.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ public class BlogController {
         this.blogService = blogService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<BlogDto> createBlogpost(@Valid @RequestBody BlogDto blogDto){
         return new ResponseEntity<BlogDto>(blogService.createBlogpost(blogDto),HttpStatus.CREATED);
@@ -45,12 +47,14 @@ public class BlogController {
         return ResponseEntity.ok(singleBlog);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity<BlogDto> updateBlogpost(@PathVariable Long id, @Valid @RequestBody BlogDto blogDto){
         BlogDto dto = blogService.updateBlogpost(id, blogDto);
         return new ResponseEntity<BlogDto>(dto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteBlogpost(@PathVariable Long id){
         blogService.removeBlogpost(id);

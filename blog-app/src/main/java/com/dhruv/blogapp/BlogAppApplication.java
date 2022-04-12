@@ -1,6 +1,7 @@
 package com.dhruv.blogapp;
 
 import com.dhruv.blogapp.repositories.BlogRepo;
+import com.dhruv.blogapp.repositories.UserRepo;
 import com.dhruv.blogapp.service.BlogService;
 import com.dhruv.blogapp.service.impl.BlogServiceImpl;
 import org.modelmapper.ModelMapper;
